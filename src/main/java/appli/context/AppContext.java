@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 
-
 /**
  *
  * @author carine
@@ -45,7 +44,7 @@ public class AppContext {
          reappro=new RuptureStockListener (this);
          agenda=new Timer();// pour les événements temporels
     }
-   
+
    public void close() {
        agenda.cancel();
    }
