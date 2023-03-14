@@ -19,13 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
+import javax.inject.Inject;
+import javax.jms.*;
 
 /**
  *
  * @author carine
  */
 public class AppContext {
-    
+
+    @Inject
+    ConnectionFactory connectionFactory;
      final private Map<Integer, Produit> produits;
      final private Map<Integer,CommandeReappro> reappros;
      final private Map<Integer, Relance> relances;
@@ -33,7 +37,8 @@ public class AppContext {
      final private Map<Integer, Client> clients;
      final private PropertyChangeListener reappro;
      final private Timer agenda;
-    
+
+
      
    public AppContext () { 
          produits=new HashMap<>();
@@ -44,6 +49,8 @@ public class AppContext {
          reappro=new RuptureStockListener (this);
          agenda=new Timer();// pour les événements temporels
     }
+
+
 
    public void close() {
        agenda.cancel();
