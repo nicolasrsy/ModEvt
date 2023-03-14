@@ -5,11 +5,13 @@
  */
 package appli.objets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author carine
  */
-public class Client {
+public class Client implements Serializable {
     private Integer id_client;
     private String nom;
     private String prenom;

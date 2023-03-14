@@ -5,11 +5,13 @@
  */
 package appli.objets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author carine
  */
-public class Commande {
+public class Commande implements Serializable {
     private Integer id_commande;
     private Client client;
     private Produit produit;

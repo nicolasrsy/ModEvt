@@ -1,13 +1,14 @@
-package appli.context;
+package appli.runnables;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.jms.*;
-
+@ApplicationScoped
 public class AppConsumer implements Runnable{
 
     @Inject

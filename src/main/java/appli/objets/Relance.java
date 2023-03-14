@@ -5,11 +5,13 @@
  */
 package appli.objets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author carine
  */
-public class Relance {
+public class Relance implements Serializable {
     
     private CommandeReappro reappro;
     private String dateRelance;

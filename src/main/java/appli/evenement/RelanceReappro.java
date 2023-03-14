@@ -8,6 +8,9 @@ package appli.evenement;
 import appli.context.AppContext;
 import appli.objets.CommandeReappro;
 import appli.objets.Relance;
+
+import javax.inject.Inject;
+import javax.jms.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +24,8 @@ public class RelanceReappro extends TimerTask {
     
     final private CommandeReappro appro;
     final private AppContext context;
+    @Inject
+    ConnectionFactory connectionFactory;
     
     public RelanceReappro(CommandeReappro appro, AppContext app){
         this.appro=appro;
@@ -34,7 +39,9 @@ public class RelanceReappro extends TimerTask {
             DateFormat fd = new SimpleDateFormat("dd/MM/yyyy");
             String d = fd.format(Calendar.getInstance().getTime());   
             Relance r=new Relance (context.getMaxIdRelance()+1,appro, d, "généré automatiquement après 1h");
-            context.addRelance(r);
+            try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+                context.createProducer().send(context.createQueue("queue/relanceReappro"), r);
+            }
         }
         
     }

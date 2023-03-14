@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
-import javax.inject.Inject;
-import javax.jms.*;
 
 /**
  *
@@ -28,8 +26,6 @@ import javax.jms.*;
  */
 public class AppContext {
 
-    @Inject
-    ConnectionFactory connectionFactory;
      final private Map<Integer, Produit> produits;
      final private Map<Integer,CommandeReappro> reappros;
      final private Map<Integer, Relance> relances;

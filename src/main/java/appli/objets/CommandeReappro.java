@@ -7,12 +7,14 @@ package appli.objets;
 
 import appli.objets.Produit;
 
+import java.io.Serializable;
+
 
 /**
  *
  * @author carine
  */
-public class CommandeReappro {
+public class CommandeReappro implements Serializable {
     private Integer qte;
     private Produit produit;
     private String dateCommande;

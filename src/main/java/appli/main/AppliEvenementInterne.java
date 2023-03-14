@@ -18,10 +18,13 @@ import java.util.logging.Logger;
  * @author carine
  */
 public class AppliEvenementInterne {
+/*
 
-    /**
+    */
+/**
      * @param args the command line arguments
-     */
+     *//*
+
     public static void main(String[] args) {
         
         try {
@@ -71,4 +74,6 @@ static void AffichageCollections (Collection c){
         System.out.println ("element "+i.next().toString());
     }
 }
+*/
+
 }

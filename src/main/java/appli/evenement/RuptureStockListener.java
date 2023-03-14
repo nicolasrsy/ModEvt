@@ -8,6 +8,11 @@ package appli.evenement;
 import appli.context.AppContext;
 import appli.objets.CommandeReappro;
 import appli.objets.Produit;
+
+import javax.inject.Inject;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.Session;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
@@ -20,7 +25,10 @@ import java.util.Calendar;
  * @author carine
  */
 public class RuptureStockListener implements PropertyChangeListener {
-    
+
+    @Inject
+    ConnectionFactory connectionFactory;
+
     final private AppContext context;
     
     public RuptureStockListener(AppContext app){
@@ -29,10 +37,28 @@ public class RuptureStockListener implements PropertyChangeListener {
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (predicat_evt (evt)) trigger_evt (evt);
-        
+        if (predicat_evt (evt)) sendToQueue("queue/rupture", evt);
     }
-    
+
+    private void sendToQueue(String destination, PropertyChangeEvent evt){
+
+        // Traitement rupture de stock par le stock ou par le seuil
+        System.out.println ("trigger Event ");
+        System.out.println ("produit :" + evt.getSource());
+        System.out.println("property " + evt.getPropertyName()+" old "+ evt.getOldValue()+ " new "+ evt.getNewValue());
+
+        Integer qte=((Produit)evt.getSource()).getSeuilRupture()+50;
+        DateFormat fd = new SimpleDateFormat("dd/MM/yyyy");
+        String d = fd.format(Calendar.getInstance().getTime());
+        String c;
+        if (evt.getPropertyName().equals("stock")) c="Générée suite à une rupture de stock";
+        else c="Générée suite à un changement de seuil";
+        CommandeReappro e=new CommandeReappro (context.getMaxIdReappro()+1,qte,(Produit)(evt.getSource()),d,c);
+        try (JMSContext jmsContext = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            jmsContext.createProducer().send(jmsContext.createQueue(destination), e);
+        }
+    }
+
     private boolean predicat_evt (PropertyChangeEvent evt){
         boolean res=false;
         if (evt.getPropertyName().equals("stock")) {
@@ -52,20 +78,7 @@ public class RuptureStockListener implements PropertyChangeListener {
         return res;
     }
     
-    private void trigger_evt (PropertyChangeEvent evt){
-        
-        // Traitement rupture de stock par le stock ou par le seuil
-        System.out.println ("trigger Event ");
-        System.out.println ("produit :" + evt.getSource());
-        System.out.println("property " + evt.getPropertyName()+" old "+ evt.getOldValue()+ " new "+ evt.getNewValue());
-        
-        Integer qte=((Produit)evt.getSource()).getSeuilRupture()+50;
-        DateFormat fd = new SimpleDateFormat("dd/MM/yyyy");
-        String d = fd.format(Calendar.getInstance().getTime());    
-        String c;
-        if (evt.getPropertyName().equals("stock")) c="Générée suite à une rupture de stock";
-        else c="Générée suite à un changement de seuil";
-        CommandeReappro e=new CommandeReappro (context.getMaxIdReappro()+1,qte,(Produit)(evt.getSource()),d,c);
+    public void trigger_evt (CommandeReappro e){
         context.addCommandeReappro(e);
     }
 }

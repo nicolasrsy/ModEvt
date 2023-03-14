@@ -5,11 +5,13 @@
  */
 package appli.objets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author carine
  */
-public class Produit extends appli.lib.PropertyChangeSupport {
+public class Produit extends appli.lib.PropertyChangeSupport implements Serializable {
     private Integer stock;
     private Integer id_produit;
     private Integer seuilRupture;
