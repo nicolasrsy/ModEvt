@@ -1,0 +1,65 @@
+import appli.context.AppContext;
+import appli.main.AppliEvenementInterne;
+import appli.objets.CommandeReappro;
+import appli.objets.Produit;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Main {
+    public static void main(String[] args) {
+/**
+ *
+ * @author carine
+ */
+                try {
+                    AppContext context=new AppContext();
+                    Produit p =new Produit(20, 1, 10,"ramettes papier A4" );
+                    context.addProduit(p);
+                    p.setStock(8);
+                    System.out.println ("Après rupture de stock");
+                    System.out.println ("liste produits :");
+                    AffichageCollections(context.getProduits());
+                    System.out.println ("liste commandeReappro :");
+                    AffichageCollections(context.getCommandeReappros());
+                    p.setStock(6);
+                    System.out.println ("Après décrément du stock");
+                    System.out.println ("liste produits :");
+                    AffichageCollections(context.getProduits());
+                    System.out.println ("liste commandeReappro :");
+                    AffichageCollections(context.getCommandeReappros());
+                    System.out.println ("arrivée de réappro");
+                    Thread.sleep(10);
+                    CommandeReappro e=context.getCommandeReappro(1);
+                    context.ArriveeReappro(e);
+                    System.out.println ("liste produits :");
+                    AffichageCollections(context.getProduits());
+                    System.out.println ("liste commandeReappro :");
+                    AffichageCollections(context.getCommandeReappros());
+                    System.out.println ("liste Relances :");
+                    AffichageCollections(context.getRelances());
+                    p.setSeuilRupture (16);
+
+                    System.out.println ("Après changement seuil de rupture");
+                    System.out.println ("liste produits :");
+                    AffichageCollections(context.getProduits());
+                    System.out.println ("liste commandeReappro :");
+                    AffichageCollections(context.getCommandeReappros());
+                    System.out.println ("liste Relances :");
+                    AffichageCollections(context.getRelances());
+                    context.close();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(appli.main.AppliEvenementInterne.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            static void AffichageCollections (Collection c){
+                Iterator i=c.iterator();
+                while (i.hasNext()){
+                    System.out.println ("element "+i.next().toString());
+                }
+            }
+
+}
