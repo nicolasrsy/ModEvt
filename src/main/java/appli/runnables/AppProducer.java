@@ -47,7 +47,7 @@ public class AppProducer implements Runnable {
     @Override
     public void run() {
         nouveauClient("queue/client", new Client(random.nextInt(100000),"Paul", "Robert", "1 rue des rues" ));
-        //la meme avec livraison
+        //la meme avec livraiso
     }
 
     private void nouveauClient(String destination, Client client){
